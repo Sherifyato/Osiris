@@ -26,7 +26,7 @@ def load_and_transform_data():
     df['y'] = df['sy_dist'] * np.cos(df['dec_rad']) * np.sin(df['ra_rad'])
     df['z'] = df['sy_dist'] * np.sin(df['dec_rad'])
 
-    # Select the necessary columns for visualization
+    # Select the necessary columns for visualization(
     return df[['pl_name', 'x', 'y', 'z']].to_dict(orient='records')
 
 

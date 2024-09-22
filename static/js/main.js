@@ -1,6 +1,9 @@
+// Variables for Three.js setup
 let scene, camera, renderer, controls, raycaster, mouse, labelDiv;
 let planetGroup = [];
-let panSpeed = 0.1;
+let panSpeed = 2;
+
+// Initialize the 3D scene
 function init() {
     // Create the scene
     scene = new THREE.Scene();
@@ -10,7 +13,7 @@ function init() {
     camera.position.z = 100;
 
     // Create a renderer
-    renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('container').appendChild(renderer.domElement);
 
@@ -36,17 +39,7 @@ function init() {
 
     // Create a label div for displaying information
     labelDiv = document.createElement('div');
-    labelDiv.style.position = 'absolute';
-    labelDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
-    labelDiv.style.color = 'white';
-    labelDiv.style.padding = '8px';
-    labelDiv.style.borderRadius = '5px';
-    labelDiv.style.fontFamily = 'Arial, sans-serif';
-    labelDiv.style.fontSize = '14px';
-    labelDiv.style.border = '1px solid white';
-    labelDiv.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.5)';
-    labelDiv.style.transition = 'all 0.3s ease';
-    labelDiv.style.display = 'none'; // Hide initially
+    labelDiv.className = 'label';
     document.body.appendChild(labelDiv);
 
     // Load exoplanet data
@@ -82,7 +75,7 @@ function init() {
     // Animation loop
     function animate() {
         requestAnimationFrame(animate);
-        // controls.update(); // Update controls
+        controls.update(); // Update controls
         renderer.render(scene, camera); // Render scene
     }
 
@@ -93,7 +86,7 @@ function init() {
 // Function to handle mouse movement and update raycaster
 function onMouseMove(event) {
     // Calculate mouse position in normalized device coordinates (-1 to +1) for both components
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.x = (event.clientX / window   .innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
 
@@ -131,15 +124,7 @@ function onMouseClick(event) {
     }
 }
 
-window.onload = init;
-
-// Update window size dynamically
-window.addEventListener('resize', function () {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-});
-
+// Function to handle keyboard controls for panning
 function onKeyDown(event) {
     switch (event.key) {
         case 'ArrowUp':
@@ -156,3 +141,20 @@ function onKeyDown(event) {
             break;
     }
 }
+
+// Function to toggle the sidebar visibility
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.getElementById('toggle-btn');
+toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+});
+
+window.addEventListener('resize', onWindowResize, false);
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+// Initialize the scene
+init();
