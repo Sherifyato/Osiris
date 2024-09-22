@@ -7,7 +7,7 @@ function init() {
 
     // Create a camera
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(200, 200, 200); // Start with a higher position to get an overview
+    camera.position.z = 100;
 
     // Create a renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -18,11 +18,7 @@ function init() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true; // Smooth controls
     controls.dampingFactor = 0.25;
-    controls.enableZoom = true; // Enable zoom
-    controls.enablePan = true; // Enable panning
-    controls.panSpeed = 0.5; // Adjust panning speed
-    controls.screenSpacePanning = true; // Enable panning in screen space (not orbiting)
-    controls.target.set(0, 0, 0); // You can change this to any position you want to focus on
+    controls.enableZoom = true;
 
     // Add ambient light
     const ambientLight = new THREE.AmbientLight(0xaaaaaa); // Soft white light
@@ -81,26 +77,7 @@ function init() {
     // Event listener for mouse movement
     window.addEventListener('mousemove', onMouseMove, false);
     // Event listener for mouse click
-    window.addEventListener('mousedown', onMouseDown, false);
-
-    // Event listener for keyboard controls
-    window.addEventListener('keydown', function (event) {
-        switch (event.code) {
-            case 'ArrowUp':
-                controls.target.y += 10; // Move up
-                break;
-            case 'ArrowDown':
-                controls.target.y -= 10; // Move down
-                break;
-            case 'ArrowLeft':
-                controls.target.x -= 10; // Move left
-                break;
-            case 'ArrowRight':
-                controls.target.x += 10; // Move right
-                break;
-        }
-        controls.update(); // Update the controls to apply the changes
-    });
+    window.addEventListener('click', onMouseClick, false);
 
     // Animation loop
     function animate() {
@@ -120,38 +97,36 @@ function onMouseMove(event) {
 }
 
 // Function to handle mouse click and detect object under mouse
-function onMouseDown(event) {
-    if (event.button === 0) { // Left mouse button only for object selection
-        // Update the raycaster based on the mouse position
-        raycaster.setFromCamera(mouse, camera);
+function onMouseClick(event) {
+    // Update the raycaster based on the mouse position
+    raycaster.setFromCamera(mouse, camera);
 
-        // Calculate objects intersecting the ray
-        const intersects = raycaster.intersectObjects(planetGroup);
+    // Calculate objects intersecting the ray
+    const intersects = raycaster.intersectObjects(planetGroup);
 
-        if (intersects.length > 0) {
-            const intersectedObject = intersects[0].object;
+    if (intersects.length > 0) {
+        const intersectedObject = intersects[0].object;
 
-            // Display label with information near the clicked object
-            labelDiv.style.display = 'block';
-            labelDiv.innerHTML = `
-                <strong>Planet Name:</strong> ${intersectedObject.userData.name} <br>
-                <strong>Distance:</strong> ${intersectedObject.userData.distance} pc
-            `;
+        // Display label with information near the clicked object
+        labelDiv.style.display = 'block';
+        labelDiv.innerHTML = `
+            <strong>Planet Name:</strong> ${intersectedObject.userData.name} <br>
+            <strong>Distance:</strong> ${intersectedObject.userData.distance} pc
+        `;
 
-            // Convert 3D position to 2D position on screen
-            const vector = new THREE.Vector3();
-            intersectedObject.getWorldPosition(vector);
-            vector.project(camera);
+        // Convert 3D position to 2D position on screen
+        const vector = new THREE.Vector3();
+        intersectedObject.getWorldPosition(vector);
+        vector.project(camera);
 
-            const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
-            const y = (vector.y * -0.5 + 0.5) * window.innerHeight;
+        const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+        const y = (vector.y * -0.5 + 0.5) * window.innerHeight;
 
-            labelDiv.style.left = `${x}px`;
-            labelDiv.style.top = `${y - 30}px`; // Adjust offset for better positioning
-        } else {
-            // Hide the label if no object is intersected
-            labelDiv.style.display = 'none';
-        }
+        labelDiv.style.left = `${x}px`;
+        labelDiv.style.top = `${y - 30}px`; // Adjust offset for better positioning
+    } else {
+        // Hide the label if no object is intersected
+        labelDiv.style.display = 'none';
     }
 }
 
