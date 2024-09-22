@@ -1,6 +1,6 @@
 let scene, camera, renderer, controls, raycaster, mouse, labelDiv;
 let planetGroup = [];
-
+let panSpeed = 0.1;
 function init() {
     // Create the scene
     scene = new THREE.Scene();
@@ -10,7 +10,7 @@ function init() {
     camera.position.z = 100;
 
     // Create a renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('container').appendChild(renderer.domElement);
 
@@ -82,10 +82,11 @@ function init() {
     // Animation loop
     function animate() {
         requestAnimationFrame(animate);
-        controls.update(); // Update controls
+        // controls.update(); // Update controls
         renderer.render(scene, camera); // Render scene
     }
 
+    document.addEventListener('keydown', onKeyDown, false);
     animate();
 }
 
@@ -138,3 +139,20 @@ window.addEventListener('resize', function () {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 });
+
+function onKeyDown(event) {
+    switch (event.key) {
+        case 'ArrowUp':
+            camera.position.y += panSpeed; // Move up
+            break;
+        case 'ArrowDown':
+            camera.position.y -= panSpeed; // Move down
+            break;
+        case 'ArrowLeft':
+            camera.position.x -= panSpeed; // Move left
+            break;
+        case 'ArrowRight':
+            camera.position.x += panSpeed; // Move right
+            break;
+    }
+}
