@@ -8,16 +8,28 @@
 </head>
 <body>
     <div id="container"></div>
+
     <div id="sidebar">
         <button id="toggle-btn">☰</button>
         <div id="sidebar-content">
-            <h2>Options</h2>
-            <button class="option-btn">Filter by Distance</button>
-            <button class="option-btn">Filter by Planet Size</button>
-            <button class="option-btn">Show Habitable Planets</button>
-            <!-- Add more options as needed -->
+            <div class="filter">
+                <h2>Options</h2>
+                <label for="distanceSlider">Distance (pc)</label>
+                <input type="range" id="distanceSlider" min="0" max="5000" value="2500" step="100">
+                <span id="distanceValue">2500</span>
+            </div>
+            <div class="filter">
+                <label for="sizeSlider">Size (Radius)</label>
+                <input type="range" id="sizeSlider" min="0" max="5" value="2.5" step="0.1">
+                <span id="sizeValue">2.5</span>
+            </div>
+            <div class="filter-buttons">
+                <button class="option-btn" id="apply-btn">Apply</button>
+                <button class="option-btn" id="reset-btn">Reset</button>
+            </div>
         </div>
     </div>
+
         <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- OrbitControls -->

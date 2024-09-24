@@ -1,9 +1,30 @@
-/* styles.css */
 body, html {
     margin: 0;
     padding: 0;
     overflow: hidden;
     font-family: Arial, sans-serif;
+}
+
+.filter {
+    margin: 20px 0;
+}
+
+#distanceValue, #sizeValue {
+    display: block;
+    color: #ffffff;
+    margin-top: 8px;
+    text-align: center;
+}
+
+input[type=range] {
+    width: 100%;
+}
+
+.filter label {
+    display: block;
+    font-size: 16px;
+    color: #ffffff;
+    margin-bottom: 8px;
 }
 
 #container {
@@ -26,6 +47,11 @@ body, html {
     transform: translateX(-250px); /* Hidden by default */
     transition: transform 0.3s ease;
     z-index: 10;
+}
+
+#sidebar h2 {
+    margin: 20px;
+    color: #ffffff;
 }
 
 #sidebar.open {
@@ -57,18 +83,29 @@ body, html {
     margin-bottom: 20px;
 }
 
+/* Updated option button styling */
 .option-btn {
-    padding: 10px;
-    background-color: #444;
-    color: white;
-    border: none;
+    padding: 12px 20px;
+    background: linear-gradient(145deg, #333, #555);
+    color: #ffffff;
+    border: 1px solid #333;
     border-radius: 5px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    font-size: 16px;
 }
 
 .option-btn:hover {
-    background-color: #666;
+    background: linear-gradient(145deg, #444, #666);
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.6);
+    transform: translateY(-3px);
+}
+
+.option-btn:active {
+    background: linear-gradient(145deg, #555, #777);
+    box-shadow: inset 2px 2px 8px rgba(0, 0, 0, 0.5);
+    transform: translateY(0);
 }
 
 .label {
@@ -83,4 +120,12 @@ body, html {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
     display: none;
+}
+
+#apply-btn {
+    padding: 10px 30px;
+}
+
+#reset-btn {
+    padding: 10px 30px;
 }

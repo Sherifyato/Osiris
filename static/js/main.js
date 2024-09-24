@@ -3,6 +3,26 @@ let scene, camera, renderer, controls, raycaster, mouse, labelDiv;
 let planetGroup = [];
 let panSpeed = 2;
 
+// earth is the reference point for distance and size
+function calcDistance(x, y, z) {
+    distance = Math.sqrt(x ** 2 + y ** 2 + z ** 2);
+    return Math.round(distance * 100) / 100;
+}
+
+
+class Exoplanet {
+    constructor(name, distance, x, y, z) {
+        this.name = name;
+        this.distance = distance;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+}
+
+
+
 // Initialize the 3D scene
 function init() {
     // Create the scene
@@ -13,7 +33,7 @@ function init() {
     camera.position.z = 100;
 
     // Create a renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('container').appendChild(renderer.domElement);
 
@@ -58,7 +78,7 @@ function init() {
                 exoplanetMesh.position.set(exoplanet.x, exoplanet.y, exoplanet.z);
                 exoplanetMesh.userData = {
                     name: exoplanet.pl_name,
-                    distance: exoplanet.sy_dist, // Include additional data as needed
+                    distance: calcDistance(exoplanet.x, exoplanet.y, exoplanet.z)
                 };
 
                 planetGroup.push(exoplanetMesh); // Add to group for raycasting
@@ -71,6 +91,34 @@ function init() {
     window.addEventListener('mousemove', onMouseMove, false);
     // Event listener for mouse click
     window.addEventListener('click', onMouseClick, false);
+
+    // Add event listeners for slider inputs
+    const distanceSlider = document.getElementById('distanceSlider');
+    const sizeSlider = document.getElementById('sizeSlider');
+    const distanceValue = document.getElementById('distanceValue');
+    const sizeValue = document.getElementById('sizeValue');
+
+    distanceSlider.addEventListener('input', () => {
+        distanceValue.textContent = distanceSlider.value;
+        distanceFilter = parseFloat(distanceSlider.value);
+    });
+
+    sizeSlider.addEventListener('input', () => {
+        sizeValue.textContent = sizeSlider.value;
+        sizeFilter = parseFloat(sizeSlider.value);
+    });
+
+    // Apply button functionality
+    const applyBtn = document.getElementById('apply-btn');
+    applyBtn.addEventListener('click', () => {
+        applyFilters();
+    });
+
+    // Reset button functionality
+    const resetBtn = document.getElementById('reset-btn');
+    resetBtn.addEventListener('click', () => {
+        resetFilters();
+    });
 
     // Animation loop
     function animate() {
@@ -86,7 +134,7 @@ function init() {
 // Function to handle mouse movement and update raycaster
 function onMouseMove(event) {
     // Calculate mouse position in normalized device coordinates (-1 to +1) for both components
-    mouse.x = (event.clientX / window   .innerWidth) * 2 - 1;
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
 
@@ -150,10 +198,19 @@ toggleBtn.addEventListener('click', () => {
 });
 
 window.addEventListener('resize', onWindowResize, false);
+
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function applyFilters() {
+    //placeholder for filtering
+}
+
+function resetFilters() {
+    //placeholder for resetting filters
 }
 
 // Initialize the scene
