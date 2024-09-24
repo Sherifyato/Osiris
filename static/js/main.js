@@ -1,4 +1,4 @@
-// Variables for Three.js setup
+// global variables for scene setup
 let scene, camera, renderer, controls, raycaster, mouse, labelDiv;
 let planetGroup = [];
 let panSpeed = 2;
@@ -8,7 +8,6 @@ function calcDistance(x, y, z) {
     distance = Math.sqrt(x ** 2 + y ** 2 + z ** 2);
     return Math.round(distance * 100) / 100;
 }
-
 
 class Exoplanet {
     constructor(name, distance, x, y, z) {
@@ -21,129 +20,32 @@ class Exoplanet {
 
 }
 
-
-
 // Initialize the 3D scene
 function init() {
-    // Create the scene
-    scene = new THREE.Scene();
 
-    // Create a camera
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 100;
+    sceneSetup();
+    loadExoplanetData();
+    applyEventListeners();
 
-    // Create a renderer
-    renderer = new THREE.WebGLRenderer({antialias: true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.getElementById('container').appendChild(renderer.domElement);
-
-    // Create OrbitControls for camera interaction
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; // Smooth controls
-    controls.dampingFactor = 0.25;
-    controls.enableZoom = true;
-
-    // Add ambient light
-    const ambientLight = new THREE.AmbientLight(0xaaaaaa); // Soft white light
-    scene.add(ambientLight);
-
-    // Directional light to simulate sunlight
-    const sunLight = new THREE.DirectionalLight(0xffffff, 1);
-    sunLight.position.set(50, 50, 50);
-    sunLight.castShadow = true; // Enable shadows
-    scene.add(sunLight);
-
-    // Create a raycaster for detecting clicks
-    raycaster = new THREE.Raycaster();
-    mouse = new THREE.Vector2();
-
-    // Create a label div for displaying information
-    labelDiv = document.createElement('div');
-    labelDiv.className = 'label';
-    document.body.appendChild(labelDiv);
-
-    // Load exoplanet data
-    fetch('/exoplanet_data')
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(exoplanet => {
-                let exoGeometry = new THREE.SphereGeometry(2, 32, 32); // Adjust size as needed
-                let exoMaterial = new THREE.MeshStandardMaterial({
-                    color: 0xaaaaaa, // Change to a more realistic color
-                    roughness: 0.7,
-                    metalness: 0.1
-                });
-                let exoplanetMesh = new THREE.Mesh(exoGeometry, exoMaterial);
-
-                exoplanetMesh.position.set(exoplanet.x, exoplanet.y, exoplanet.z);
-                exoplanetMesh.userData = {
-                    name: exoplanet.pl_name,
-                    distance: calcDistance(exoplanet.x, exoplanet.y, exoplanet.z)
-                };
-
-                planetGroup.push(exoplanetMesh); // Add to group for raycasting
-                scene.add(exoplanetMesh);
-            });
-        })
-        .catch(error => console.error('Error fetching exoplanet data:', error));
-
-    // Event listener for mouse movement
-    window.addEventListener('mousemove', onMouseMove, false);
-    // Event listener for mouse click
-    window.addEventListener('click', onMouseClick, false);
-
-    // Add event listeners for slider inputs
-    const distanceSlider = document.getElementById('distanceSlider');
-    const sizeSlider = document.getElementById('sizeSlider');
-    const distanceValue = document.getElementById('distanceValue');
-    const sizeValue = document.getElementById('sizeValue');
-
-    distanceSlider.addEventListener('input', () => {
-        distanceValue.textContent = distanceSlider.value;
-        distanceFilter = parseFloat(distanceSlider.value);
-    });
-
-    sizeSlider.addEventListener('input', () => {
-        sizeValue.textContent = sizeSlider.value;
-        sizeFilter = parseFloat(sizeSlider.value);
-    });
-
-    // Apply button functionality
-    const applyBtn = document.getElementById('apply-btn');
-    applyBtn.addEventListener('click', () => {
-        applyFilters();
-    });
-
-    // Reset button functionality
-    const resetBtn = document.getElementById('reset-btn');
-    resetBtn.addEventListener('click', () => {
-        resetFilters();
-    });
-
-    // Animation loop
     function animate() {
         requestAnimationFrame(animate);
-        controls.update(); // Update controls
-        renderer.render(scene, camera); // Render scene
+        controls.update();
+        renderer.render(scene, camera);
     }
 
-    document.addEventListener('keydown', onKeyDown, false);
     animate();
 }
 
-// Function to handle mouse movement and update raycaster
+// mouse movement and raycaster
 function onMouseMove(event) {
     // Calculate mouse position in normalized device coordinates (-1 to +1) for both components
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
 
-// Function to handle mouse click and detect object under mouse
 function onMouseClick(event) {
     // Update the raycaster based on the mouse position
     raycaster.setFromCamera(mouse, camera);
-
-    // Calculate objects intersecting the ray
     const intersects = raycaster.intersectObjects(planetGroup);
 
     if (intersects.length > 0) {
@@ -167,12 +69,11 @@ function onMouseClick(event) {
         labelDiv.style.left = `${x}px`;
         labelDiv.style.top = `${y - 30}px`; // Adjust offset for better positioning
     } else {
-        // Hide the label if no object is intersected
         labelDiv.style.display = 'none';
     }
 }
 
-// Function to handle keyboard controls for panning
+// handle keyboard controls for panning (currently off)
 function onKeyDown(event) {
     switch (event.key) {
         case 'ArrowUp':
@@ -190,15 +91,6 @@ function onKeyDown(event) {
     }
 }
 
-// Function to toggle the sidebar visibility
-const sidebar = document.getElementById('sidebar');
-const toggleBtn = document.getElementById('toggle-btn');
-toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-});
-
-window.addEventListener('resize', onWindowResize, false);
-
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -213,5 +105,102 @@ function resetFilters() {
     //placeholder for resetting filters
 }
 
-// Initialize the scene
+
+function loadExoplanetData() {
+    fetch('/exoplanet_data')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(exoplanet => {
+                let exoGeometry = new THREE.SphereGeometry(2, 32, 32);
+                let exoMaterial = new THREE.MeshStandardMaterial({
+                    color: 0xaaaaaa, // Change to a more realistic color
+                    roughness: 0.7,
+                    metalness: 0.1
+                });
+                let exoplanetMesh = new THREE.Mesh(exoGeometry, exoMaterial);
+
+                exoplanetMesh.position.set(exoplanet.x, exoplanet.y, exoplanet.z);
+                exoplanetMesh.userData = {
+                    name: exoplanet.pl_name,
+                    distance: calcDistance(exoplanet.x, exoplanet.y, exoplanet.z)
+                };
+
+                planetGroup.push(exoplanetMesh); // Add to group for raycasting
+                scene.add(exoplanetMesh);
+            });
+        })
+        .catch(error => console.error('Error fetching exoplanet data:', error));
+}
+
+function sceneSetup() {
+    scene = new THREE.Scene(); //scene
+
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 100; // camera
+
+    renderer = new THREE.WebGLRenderer({antialias: true}); // renderer
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('container').appendChild(renderer.domElement);
+
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; // Smooth controls
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = true; // orbit controls
+
+    const ambientLight = new THREE.AmbientLight(0xaaaaaa); // Soft white light
+    scene.add(ambientLight); // ambient light
+
+    const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+    sunLight.position.set(50, 50, 50);
+    sunLight.castShadow = true; // Enable shadows
+    scene.add(sunLight); // sunlight
+
+    raycaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2(); // raycaster and mouse
+
+    labelDiv = document.createElement('div');
+    labelDiv.className = 'label';
+    document.body.appendChild(labelDiv);
+}
+
+function applyEventListeners() {
+
+    window.addEventListener('mousemove', onMouseMove, false);
+    window.addEventListener('click', onMouseClick, false);
+
+    // slider inputs and buttons
+    const distanceSlider = document.getElementById('distanceSlider');
+    const sizeSlider = document.getElementById('sizeSlider');
+    const distanceValue = document.getElementById('distanceValue');
+    const sizeValue = document.getElementById('sizeValue');
+
+    distanceSlider.addEventListener('input', () => {
+        distanceValue.textContent = distanceSlider.value;
+        distanceFilter = parseFloat(distanceSlider.value);
+    });
+    sizeSlider.addEventListener('input', () => {
+        sizeValue.textContent = sizeSlider.value;
+        sizeFilter = parseFloat(sizeSlider.value);
+    });
+
+    const applyBtn = document.getElementById('apply-btn');
+    applyBtn.addEventListener('click', () => {
+        applyFilters();
+    });
+    const resetBtn = document.getElementById('reset-btn');
+    resetBtn.addEventListener('click', () => {
+        resetFilters();
+    });
+
+    document.addEventListener('keydown', onKeyDown, false);
+
+    // sidebar toggle button
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggle-btn');
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+    window.addEventListener('resize', onWindowResize, false);
+}
+
 init();
