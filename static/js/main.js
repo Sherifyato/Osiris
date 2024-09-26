@@ -9,6 +9,87 @@ function calcDistance(x, y, z) {
     return Math.round(distance * 100) / 100;
 }
 
+starColours = ['#37ff00', '#ff9900', '#ff6600', '#ff3300', '#1aa9de']
+// starColoursg
+// starColoursb
+// convert to rgb
+
+stars = [];
+
+function addStarField() {
+    starGeometry = [];
+    starmaterial = [];
+    colourCount = starColours.length;
+
+    for (let num = 0; num < colourCount; num++) {
+        starGeometry.push(new THREE.BufferGeometry())
+        let starCount = 1000
+        let starVertices = [];
+
+        // Randomly place stars around the viewer's perspective
+        for (let i = 0; i < starCount; i++) {
+            let x = (Math.random() - 0.5) * 2000; // Random x-coordinate
+            let y = (Math.random() - 0.5) * 2000; // Random y-coordinate
+            let z = (Math.random() - 0.5) * 2000; // Random z-coordinate
+            starVertices.push(x, y, z);
+        }
+
+        // starGeometry[num].setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+        // starMaterial = new THREE.PointsMaterial({color: starColours[num]});
+        // stars.push(new THREE.Points(starGeometry, starMaterial));
+        // starVertices.length = 0;
+        // objLoader for stars moon.obj
+
+        starGeometry[num].setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+
+        // stars shape is moon.obj
+        // stars[num] = new THREE.ObjectLoader().load('/static/models/moon.obj', (model) =>{
+        //     model.traverse((child) => {
+        //         if(child.isMesh){
+        //             child.material.color.set(starColours[num]);
+        //         }
+        //     })
+        //     scene.add(model);
+        // });
+
+        starmaterial.push(new THREE.PointsMaterial({color: starColours[num]}));
+        stars.push(new THREE.Points(starGeometry[num], starmaterial[num]));
+
+
+    }
+
+    for (let i = 0; i < colourCount; i++) {
+        scene.add(stars[i]);
+    }
+
+}
+
+function addGalaxyBackground() {
+    const galaxyTexture = new THREE.TextureLoader().load('/static/images/galaxy.jpg');
+    // set galaxy geometry to cover full screen
+    const galaxyGeometry = new THREE.PlaneGeometry(1000, 1000);
+    const galaxyMaterial = new THREE.MeshBasicMaterial({
+        map: galaxyTexture,
+        //make side anything but backside
+        side: THREE.DoubleSide
+    });
+    const galaxyMesh = new THREE.Mesh(galaxyGeometry, galaxyMaterial);
+    scene.add(galaxyMesh);
+}
+
+// Call this function after initializing the scene
+
+
+function animate() {
+    requestAnimationFrame(animate);
+    // Rotate the star field and
+    // scene.getObjectByName('stars').rotation.y += 0.0001;
+    // scene.getObjectByName('galaxyMesh').rotation.y += 0.0001;
+
+    controls.update();
+    renderer.render(scene, camera);
+}
+
 class Exoplanet {
     constructor(name, distance, x, y, z) {
         this.name = name;
@@ -26,12 +107,8 @@ function init() {
     sceneSetup();
     loadExoplanetData();
     applyEventListeners();
-
-    function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
-    }
+    // addStarField();
+    // addGalaxyBackground();
 
     animate();
 }
