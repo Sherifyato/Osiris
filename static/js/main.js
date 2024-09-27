@@ -1,6 +1,7 @@
 // global variables for scene setup
 let scene, camera, renderer, controls, raycaster, mouse, labelDiv;
 let planetGroup = [];
+let inScene = [];
 let panSpeed = 2;
 
 // earth is the reference point for distance and size
@@ -175,11 +176,33 @@ function onWindowResize() {
 }
 
 function applyFilters() {
-    //placeholder for filtering
+    distanceFilter = parseFloat(document.getElementById('distanceSlider').value);
+    sizeFilter = parseFloat(document.getElementById('sizeSlider').value);
+    planetGroup.forEach(planet => {
+        if (inScene[planet.userData.name] == false) {
+            if (planet.userData.distance < distanceFilter)
+                scene.add(planet), inScene[planet.userData.name] = true;
+        } else {
+            if (planet.userData.distance > distanceFilter)
+                scene.remove(planet), inScene[planet.userData.name] = false;
+        }
+    });
+
 }
 
 function resetFilters() {
-    //placeholder for resetting filters
+    document.getElementById('distanceSlider').value = 1000;
+    document.getElementById('sizeSlider').value = 2;
+    // edit in label
+    document.getElementById('distanceValue').textContent = 1000;
+    document.getElementById('sizeValue').textContent = 2;
+    // clear old scene
+    planetGroup.forEach(planet => {
+        if (inScene[planet.userData.name] == false) {
+            scene.add(planet);
+            inScene[planet.userData.name] = true;
+        }
+    });
 }
 
 
@@ -190,7 +213,8 @@ function loadExoplanetData() {
             data.forEach(exoplanet => {
                 let exoGeometry = new THREE.SphereGeometry(2, 32, 32);
                 let exoMaterial = new THREE.MeshStandardMaterial({
-                    color: 0xaaaaaa, // Change to a more realistic color
+                    color: // Random color from starColours
+                        starColours[Math.floor(Math.random() * starColours.length)],
                     roughness: 0.7,
                     metalness: 0.1
                 });
@@ -204,6 +228,7 @@ function loadExoplanetData() {
 
                 planetGroup.push(exoplanetMesh); // Add to group for raycasting
                 scene.add(exoplanetMesh);
+                inScene[exoplanet.pl_name] = true;
             });
         })
         .catch(error => console.error('Error fetching exoplanet data:', error));

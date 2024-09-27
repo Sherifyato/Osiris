@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style-fields.css">
+    <link rel="icon" href="../../../Downloads/GEEKS-main/GEEKS-main/untitled1/Backgrounds/Home/logo.svg">
+    <title>machine learning</title>
+</head>
+<body>
+
+
+<section class="main" id="main" style="--homeImageSrc: url(../static/images/OsirisPlanet.png)">
+    <div>
+        <h2>Welcome at<br><span>Exoplanet HD 209458 b 'Osiris'</span></h2>
+        <h3>We brought the planet to you</h3>
+<!--        <a href="../../../Downloads/GEEKS-main/GEEKS-main/untitled1/main%20page.html" class="main-btn">HWO</a>-->
+        <a href="#article" class="main-btn">about the planet</a>
+        <a href="#road map" class="main-btn">statistics about the planet</a>
+        <a href="#video" class="main-btn">Explanation video</a>
+    </div>
+</section>
+<section class="main" id="second" style="--homeImageSrc: url(../static/images/OsirisPlanet.png)">
+    <h2 class="title" id="article"><span>about the planet</span></h2>
+    <div class="content">
+        <p> On September 9, 1999, a team of astronomers from the High Altitude Observatory made a groundbreaking
+            discovery. Using the radial velocity method, they detected a massive, Jupiter-sized planet orbiting a
+            Sun-like star HD 209458.
+
+            <br>This was the first exoplanet to be discovered using this method, and since that fateful day, this system
+            has become a champion of firsts.
+            <br>The planet is HD 209458 b, and nicknamed “Osiris” after the Egyptian god of the underworld.
+            Osiris is a fitting nickname for this planet, as it is a very hot and hostile world. HD 209458 b orbits its
+            star very closely, and its surface temperature is estimated to be around 1,000 degrees Celsius.
+            <br>This makes it too hot for liquid water to exist on its surface, and it is unlikely to be habitable.
+            <br>Even so, this planet is remarkable in many ways. It occupies first place in a long list of discovery
+            milestones. Here are the areas Osiris occupies first place.
+            <br>It is one of the first exoplanets to be discovered using the transit method, which means that
+            astronomers were able to detect it by observing how its star’s light dimmed as the planet passed in front of
+            it.
+            This was a major breakthrough, as it showed that it was possible to directly detect exoplanets.
+        </p>
+        <p></p>
+    </div>
+</section>
+<section class="main" id="road map" style="--homeImageSrc: url(../static/images/OsirisPlanet.png)">
+    <h2 class="title"><span>data about the planet</span></h2>
+    <div style="text-align: center; font-size : 60px;color: #f0f0f0"> still working on it</div>
+        <!--    <img src="../static/images/mach.jpg" alt="machine learning road map">-->
+</section>
+<section class="main" id="video" style="--homeImageSrc: url(../static/images/audience.jpeg)">
+    <h2 class="title"><span>video</span></h2>
+    <iframe width="100%" height="500"
+            src="https://www.youtube.com/embed/Spo0dppFX9w">
+    </iframe>
+</section>
+<button onclick="gotop()" class="Tbutton">
+    <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="To-Top-Icon"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+    >
+        <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7 11l5-5m0 0l5 5m-5-5v12"
+        />
+    </svg>
+</button>
+<script>
+    let Tbutton = document.getElementsByClassName("Tbutton");
+
+    window.onscroll = function () {
+        appearFunction()
+    };
+
+    function appearFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            Tbutton[0].style.opacity = 100;
+        } else {
+            Tbutton[0].style.opacity = 0;
+        }
+    }
+
+    function gotop() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+</script>
+</body>
+</html>
