@@ -209,6 +209,7 @@ function loadExoplanetData() {
         .catch(error => console.error('Error fetching exoplanet data:', error));
 }
 
+
 function sceneSetup() {
     scene = new THREE.Scene(); //scene
 
