@@ -85,7 +85,6 @@ function loadExoplanetData() {
 
 }
 
-// API Route to load transformed exoplanet data
 app.get('/exoplanet_data', async (req, res) => {
     try {
         const data = await loadAndTransformData();
@@ -95,17 +94,15 @@ app.get('/exoplanet_data', async (req, res) => {
     }
 });
 
-// Serve index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'templates', 'index.html'));
 });
 
-// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
 app.get('/favicon.ico', (req, res) => {
-    res.status(204); // No content
+    res.status(204);
 });

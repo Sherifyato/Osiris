@@ -213,8 +213,7 @@ function loadExoplanetData() {
             data.forEach(exoplanet => {
                 let exoGeometry = new THREE.SphereGeometry(2, 32, 32);
                 let exoMaterial = new THREE.MeshStandardMaterial({
-                    color: // Random color from starColours
-                        starColours[Math.floor(Math.random() * starColours.length)],
+                    color: 0xeff0ff,
                     roughness: 0.7,
                     metalness: 0.1
                 });
@@ -226,7 +225,7 @@ function loadExoplanetData() {
                     distance: calcDistance(exoplanet.x, exoplanet.y, exoplanet.z)
                 };
 
-                planetGroup.push(exoplanetMesh); // Add to group for raycasting
+                planetGroup.push(exoplanetMesh);
                 scene.add(exoplanetMesh);
                 inScene[exoplanet.pl_name] = true;
             });
