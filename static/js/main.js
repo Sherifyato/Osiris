@@ -125,16 +125,20 @@ function onMouseClick(event) {
     // Update the raycaster based on the mouse position
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(planetGroup);
-
+    //     <iframe src="https://eyes.nasa.gov/apps/solar-system/#/home?embed=true" width="400" height="250"></iframe>
     if (intersects.length > 0) {
         const intersectedObject = intersects[0].object;
 
         // Display label with information near the clicked object
         labelDiv.style.display = 'block';
+        let planetName = intersectedObject.userData.name;
+        // if there is spaces in the name, replace with _
+        planetName = planetName.replace(/\s/g, "_");
+        let url = `https://eyes.nasa.gov/apps/exo/#/planet/${planetName}?embed=true&logo=false&menu=false`;
         labelDiv.innerHTML = `
             <strong>Planet Name:</strong> ${intersectedObject.userData.name} <br>
             <strong>Distance:</strong> ${intersectedObject.userData.distance} pc
-        `;
+            <iframe src="https://eyes.nasa.gov/apps/exo/#/planet/${planetName}?embed=true&featured=false&logo=false&menu=false" width="400" height="200"></iframe>        `;
 
         // Convert 3D position to 2D position on screen
         const vector = new THREE.Vector3();
