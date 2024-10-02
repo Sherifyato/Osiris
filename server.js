@@ -103,6 +103,6 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-app.get('/favicon.ico', (req, res) => {
+app.get('/favicon.ico', (greq, res) => {
     res.status(204);
 });
