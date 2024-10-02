@@ -1,47 +1,38 @@
-from flask import Flask, render_template, jsonify
-import pandas as pd
-import numpy as np
+from flask import Flask, render_template, request, jsonify
+import google.generativeai as genai
 
 app = Flask(__name__)
 
+# Set your API key (replace with your actual API key)
+API_KEY = 'AIzaSyC3h6H8lD-0XrGe683NA8Impy4G50eO--U'
+MODEL_NAME = 'gemini-1.0-pro'
 
-# Load and transform exoplanet data
-def load_and_transform_data():
-    # Load data from CSV file
-    df = pd.read_csv('exoplanet_data.csv')
-
-    # Ensure 'ra', 'dec', and 'sy_dist' columns are available and valid
-    if not all(col in df.columns for col in ['ra', 'dec', 'sy_dist']):
-        raise ValueError("The dataset must contain 'ra', 'dec', and 'sy_dist' columns.")
-
-    # Replace any missing or invalid distances with a default value (e.g., NaN or 1)
-    df['sy_dist'] = pd.to_numeric(df['sy_dist'], errors='coerce').fillna(1)
-
-    # Convert 'ra' and 'dec' to radians
-    df['ra_rad'] = np.radians(df['ra'])
-    df['dec_rad'] = np.radians(df['dec'])
-
-    # Calculate Cartesian coordinates
-    df['x'] = df['sy_dist'] * np.cos(df['dec_rad']) * np.cos(df['ra_rad'])
-    df['y'] = df['sy_dist'] * np.cos(df['dec_rad']) * np.sin(df['ra_rad'])
-    df['z'] = df['sy_dist'] * np.sin(df['dec_rad'])
-
-    # Select the necessary columns for visualization(
-    return df[['pl_name', 'x', 'y', 'z']].to_dict(orient='records')
+# Configure the generative AI model
+genai.configure(api_key=API_KEY)
+model = genai.GenerativeModel(model_name=MODEL_NAME)
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('nosa.html')
 
 
-@app.route('/exoplanet_data')
-def exoplanet_data():
-    try:
-        data = load_and_transform_data()
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    return jsonify(data)
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_input = request.json.get('input')
+
+    # Create the base prompt for the chatbot
+    base = ("Your name is Nusa, you are a chatbot that exists on a website which "
+            "is a solution for one of NASA Space Apps 2024 problems. Answer only questions "
+            "related to the contest or NASA overall. Start your chat with a small greeting.")
+
+    # Create the full prompt
+    prompt = f"role: {base}, input user: {user_input}"
+
+    # Generate a response using the generative AI model
+    response = model.generate_content([prompt])
+
+    return jsonify({'response': response.text})
 
 
 if __name__ == '__main__':
