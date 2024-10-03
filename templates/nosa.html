@@ -1,4 +1,3 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,28 +21,25 @@
 <div class="main-content">
     <!-- Main Content Goes Here -->
     <div id="chat-container">
-        <h2>Ask NOSA!</h2>
-        <input type="text" id="userInput" placeholder="Ask about an exoplanet...">
+        <h2>Ask NOSA about {{ planet_name }}</h2> <!-- Dynamic heading -->
+        <input type="text" id="userInput" placeholder="Ask about {{ planet_name }}..."> <!-- Updated placeholder -->
         <button onclick="sendMessage()">Send</button>
         <p id="response"></p>
     </div>
     <section class="info-section">
         <div id="info-text">
-            <h2>Exoplanet HD 209458 b 'Osiris'</h2>
+            <h2>Exoplanet {{ planet_name }}</h2> <!-- Dynamic planet info -->
             <p>
-                HD 209458 b, also known as 'Osiris,' is a Jupiter-sized exoplanet orbiting a sun-like star. Discovered
-                in 1999, it is known for its significant atmospheric studies.
-                Here you can find graphical analysis and 3D visualizations of the exoplanet Osiris.
+                {{ planet_name }} is a well-studied exoplanet. Here you can find graphical analysis and 3D visualizations of the planet.
             </p>
         </div>
     </section>
     <section class ="info-section">
-        <iframe src="https://example-graph-site.com/exoplanet-data"></iframe>
-        <iframe src="https://eyes.nasa.gov/apps/exo/#/planet/HATS-71_b?embed=true&;featured=false&;logo=false&;menu=false"></iframe>
+        <iframe src="https://wazimap.co.za/static/embed/01/js/embed.chart.make.js"></iframe>
+        <iframe src={{url}}></iframe>
     </section>
 </div>
 
-<!-- templates/footer.html -->
 <footer id="footer">
     <p>© 2024 OSIRIS | All Rights Reserved</p>
 </footer>

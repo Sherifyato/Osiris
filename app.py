@@ -13,13 +13,26 @@ model = genai.GenerativeModel(model_name=MODEL_NAME)
 
 
 @app.route('/')
-def index():
-    return render_template('nosa.html')
+def default_page():
+    default_planet = "earth"
+    # You can change this to any planet
+    url = f"https://eyes.nasa.gov/apps/exo/#/{default_planet}?embed=true&;featured=false&;logo=false&;menu=false"
+    return render_template('nosa.html', planet_name=default_planet, url=url)
+
+@app.route('/<planet_name>')
+def planet_page(planet_name):
+    # Pass the planet_name to the template
+    url = f"https://eyes.nasa.gov/apps/exo/#/planet/{planet_name}?embed=true&;featured=false&;logo=false&;menu=false"
+    return render_template('nosa.html', planet_name=planet_name, url=url)
 
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_input = request.json.get('input')
+    user_input = request.json.get('input').strip()
+
+    # Server-side validation for empty input
+    if not user_input:
+        return jsonify({'response': 'Please enter a valid question.'})
 
     # Create the base prompt for the chatbot
     base = ("Your name is Nosa, you are a chatbot that exists on a website which "

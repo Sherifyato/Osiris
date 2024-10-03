@@ -1,6 +1,10 @@
-// static/js/script.js
 function sendMessage() {
-    let userInput = document.getElementById('userInput').value;
+    let userInput = document.getElementById('userInput').value.trim();  // Trim spaces
+    if (userInput === "") {
+        alert("Please enter a question before sending!");  // Alert user for empty input
+        return;
+    }
+
     fetch('/chat', {
         method: 'POST',
         headers: {
@@ -11,13 +15,8 @@ function sendMessage() {
     .then(response => response.json())
     .then(data => {
         document.getElementById('response').innerText = data.response;
-        // speakMessage();
+    })
+    .catch(error => {
+        document.getElementById('response').innerText = "Something went wrong, please try again!";
     });
-}
-
-function speakMessage() {
-    let message = document.getElementById('response').innerText;
-    let synth = window.speechSynthesis;
-    let utterThis = new SpeechSynthesisUtterance(message);
-    synth.speak(utterThis);
 }
