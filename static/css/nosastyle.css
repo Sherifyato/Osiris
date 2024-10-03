@@ -1,0 +1,169 @@
+/* General styling for body */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('/static/images/OsirisPlanet.png') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
+
+/* Styling for the navigation bar */
+.navbar {
+    background-color: rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 14px 20px;
+    text-align: center;
+}
+
+.navbar a:hover {
+    background-color: #00ffff;
+    color: black;
+    border-radius: 5px;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #00ffff;
+}
+
+/* Spacing for the rest of the content */
+.main-content {
+    padding-top: 70px; /* Offset for fixed navbar */
+}
+
+#chat-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    width: 400px;
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    margin: 30px auto;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+h2 {
+    font-size: 1.8em;
+    color: #00ffff;
+}
+
+input[type="text"] {
+    width: 85%;
+    padding: 12px;
+    border: 2px solid #00ffff;
+    border-radius: 8px;
+    background-color: transparent;
+    color: white;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 12px 25px;
+    background-color: #00ffff;
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #00b3b3;
+}
+
+#response {
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #fff;
+}
+
+/* Section for planet information and graphics */
+.info-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    margin: 20px auto;
+    width: 90%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+#info-text {
+    flex: 1;
+    margin-right: 20px;
+    text-align: left;
+}
+
+iframe {
+    flex: 1;
+    height: 400px;
+    border: none;
+}
+
+/* Smooth fade-in animation for chat box */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Footer styling - Smaller bar with copyright */
+footer {
+    background-color: rgba(0, 0, 0, 0.7);
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 0.85em;
+    color: #00ffff;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer a {
+    color: #00ffff;
+    text-decoration: none;
+}
+
+/* Glowing effect for input and buttons */
+input:focus, button:hover {
+    box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff;
+}
+
+/* Responsive media query */
+@media (max-width: 768px) {
+    #info-section {
+        flex-direction: column;
+    }
+
+    iframe {
+        height: 300px;
+    }
+}

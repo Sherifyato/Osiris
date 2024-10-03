@@ -22,7 +22,7 @@ def chat():
     user_input = request.json.get('input')
 
     # Create the base prompt for the chatbot
-    base = ("Your name is Nusa, you are a chatbot that exists on a website which "
+    base = ("Your name is Nosa, you are a chatbot that exists on a website which "
             "is a solution for one of NASA Space Apps 2024 problems. Answer only questions "
             "related to the contest or NASA overall. Start your chat with a small greeting.")
 
