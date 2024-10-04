@@ -136,7 +136,7 @@ function onMouseClick(event) {
         planetName = planetName.replace(/\s/g, "_");
         let url = `https://eyes.nasa.gov/apps/exo/#/planet/${planetName}?embed=true&logo=false&menu=false`;
         labelDiv.innerHTML = `
-            <strong>Planet Name:</strong> ${intersectedObject.userData.name} <br>
+            <a href="http://127.0.0.1:5000/${planetName}" target="_blank">${intersectedObject.userData.name}</a><br>
             <strong>Distance:</strong> ${intersectedObject.userData.distance} pc
             <iframe src="https://eyes.nasa.gov/apps/exo/#/planet/${planetName}?embed=true&featured=false&logo=false&menu=false" width="400" height="200"></iframe>        `;
 
@@ -217,7 +217,7 @@ function loadExoplanetData() {
             data.forEach(exoplanet => {
                 let exoGeometry = new THREE.SphereGeometry(2, 32, 32);
                 let exoMaterial = new THREE.MeshStandardMaterial({
-                    color: 0xeff0ff,
+                    color: 0x0000ff,
                     roughness: 0.7,
                     metalness: 0.1
                 });

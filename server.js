@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, 'static')));
 
 // Endpoint to serve index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'templates', 'index.html'));
+    res.sendFile(path.join(__dir , 'templates', 'index.html'));
 });
 
 // Example CSV data loader
