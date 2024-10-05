@@ -1,5 +1,37 @@
 from flask import Flask, render_template, request, jsonify
 import google.generativeai as genai
+import pygame
+import time
+import requests
+
+# Set your ElevenLabs API key
+api_key = "sk_687b96417702a78b591c810c3ef75aaf5396470c56eec2f5"
+
+# The text response from your chatbot (stored in this variable)
+# chatbot_response = "Hello! How can I assist you today?"
+
+# Valid voice ID (You need to get this from ElevenLabs or via their API)
+voice_id = "XfNU2rGpBa01ckF309OY"
+
+# API URL for ElevenLabs text-to-speech (use a valid voice ID)
+url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+
+# Headers for the API request
+headers = {
+    "accept": "audio/mpeg",  # Expected response is audio in MPEG format
+    "xi-api-key": api_key,
+    "Content-Type": "application/json"
+}
+
+# Initialize pygame mixer
+pygame.mixer.init()
+
+# Load the MP3 file
+
+# Play the MP3 file
+
+
+# Keep the program running while the music plays
 
 app = Flask(__name__)
 
@@ -42,8 +74,33 @@ def chat():
     # Create the full prompt
     prompt = f"role: {base}, input user: {user_input}"
 
+
+
     # Generate a response using the generative AI model
     response = model.generate_content([prompt])
+
+    data = {
+        "text": response.text,  # Text to convert to speech
+        "model_id": "eleven_monolingual_v1",  # Example model
+        "settings": {
+            "stability": 0.75,  # You can tweak stability and similarity to the cloned voice
+            "similarity_boost": 0.75
+        }
+    }
+    print(response)
+    # Send POST request to ElevenLabs API
+
+    response1 = requests.post(url, json=data, headers=headers)
+    time.sleep(3)
+    if response1.status_code == 200:
+        with open("output_speech.mp3", "wb") as audio_file:
+            audio_file.write(response1.content)
+        pygame.mixer.music.load("output_speech.mp3")
+        pygame.mixer.music.play()
+        print("done")
+    else:
+        print("Error")
+
 
     return jsonify({'response': response.text})
 

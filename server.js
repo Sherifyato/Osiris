@@ -19,37 +19,48 @@ app.get('/', (req, res) => {
 function loadAndTransformData() {
     return new Promise((resolve, reject) => {
         const results = [];
+        count =0;
         fs.createReadStream('NASAfeatures.csv')
             .pipe(csv())
             .on('data', (row) => {
                 const ra = parseFloat(row['ra']);
                 const dec = parseFloat(row['dec']);
                 const sy_dist = parseFloat(row['sy_dist']) || 1;
-                let PSI = parseFloat(row['PSI']);
+                let PSI = parseFloat(row['pl_eqt']);
+                if(isNaN(PSI)) count++;
                 let colourFromPSI = 0x000000;
                 // psi [-1, 1] -> -1 is red, 1 is blue and alternating in between
                 let blue, red;
+                PSI -= 34;
+                // 34,4050
+                PSI -= 2008
                 if (PSI < 0) {
                     red = Math.abs(PSI);
-                    blue = 1 - red;
+                    blue = 2008 - red;
+                    red /= 2008
+                    blue /= 2008
                     blue *= 255;
                     red *= 255;
                 } else {
                     blue = PSI
-                    red = 1 - blue;
+                    red = 2008 - blue;
+                    red /= 2008
+                    blue /= 2008
                     blue *= 255;
                     red *= 255;
                 }
-                colourFromPSI = Math.round(red) << 16 | Math.round(blue);
 
+                colourFromPSI = Math.round(red) << 16 | Math.round(blue);
+                if(colourFromPSI === 0 )
+                    colourFromPSI = 0xffffff;
                 const raRad = (ra * Math.PI) / 180;
                 const decRad = (dec * Math.PI) / 180;
 
                 const x = sy_dist * Math.cos(decRad) * Math.cos(raRad);
                 const y = sy_dist * Math.cos(decRad) * Math.sin(raRad);
                 const z = sy_dist * Math.sin(decRad);
-                console.log(PSI, colourFromPSI);
-                results.push({pl_name: row['pl_name'], x, y, z,colourFromPSI});
+                // console.log(PSI, colourFromPSI);
+                results.push({pl_name: row['pl_name'], x, y, z, colourFromPSI});
             })
             .on('end', () => resolve(results))
             .on('error', reject);

@@ -69,7 +69,7 @@ function addStarField() {
 }
 
 function addGalaxyBackground() {
-    const galaxyTexture = new THREE.TextureLoader().load('/static/images/galaxy.jpg');
+    const galaxyTexture = new THREE.TextureLoader().load('/static/images/ggalaxy.jpg');
     // set galaxy geometry to cover full screen
     const galaxyGeometry = new THREE.PlaneGeometry(1000, 1000);
     const galaxyMaterial = new THREE.MeshBasicMaterial({
