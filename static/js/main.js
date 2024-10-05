@@ -220,7 +220,7 @@ function loadExoplanetData() {
             data.forEach(exoplanet => {
                 let exoGeometry = new THREE.SphereGeometry(2, 32, 32);
                 let exoMaterial = new THREE.MeshStandardMaterial({
-                    color: 0x0000ff,
+                    color: exoplanet.colourFromPSI,
                     roughness: 0.7,
                     metalness: 0.1
                 });
