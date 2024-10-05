@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, 'static')));
 
 // Endpoint to serve index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dir , 'templates', 'index.html'));
+    res.sendFile(path.join(__dirname , 'templates', 'index.html'));
 });
 
 // Example CSV data loader
@@ -49,6 +49,7 @@ app.get('/exoplanet_data', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+app.use('/static', express.static(path.join(__dirname, 'static')));
 
 // Start the server on port 3000
 app.listen(PORT, () => {

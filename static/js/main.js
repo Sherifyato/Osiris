@@ -1,4 +1,7 @@
 // global variables for scene setup
+// import * as THREE from "../../node_modules/three/build/three.module.js";
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
 let scene, camera, renderer, controls, raycaster, mouse, labelDiv;
 let planetGroup = [];
 let inScene = [];
@@ -6,21 +9,21 @@ let panSpeed = 2;
 
 // earth is the reference point for distance and size
 function calcDistance(x, y, z) {
-    distance = Math.sqrt(x ** 2 + y ** 2 + z ** 2);
+    let distance = Math.sqrt(x ** 2 + y ** 2 + z ** 2);
     return Math.round(distance * 100) / 100;
 }
 
-starColours = ['#37ff00', '#ff9900', '#ff6600', '#ff3300', '#1aa9de']
+let starColours = ['#37ff00', '#ff9900', '#ff6600', '#ff3300', '#1aa9de']
 // starColoursg
 // starColoursb
 // convert to rgb
 
-stars = [];
+let stars = [];
 
 function addStarField() {
-    starGeometry = [];
-    starmaterial = [];
-    colourCount = starColours.length;
+    let starGeometry = [];
+    let starmaterial = [];
+    let colourCount = starColours.length;
 
     for (let num = 0; num < colourCount; num++) {
         starGeometry.push(new THREE.BufferGeometry())
@@ -180,8 +183,8 @@ function onWindowResize() {
 }
 
 function applyFilters() {
-    distanceFilter = parseFloat(document.getElementById('distanceSlider').value);
-    sizeFilter = parseFloat(document.getElementById('sizeSlider').value);
+    let distanceFilter = parseFloat(document.getElementById('distanceSlider').value);
+    let sizeFilter = parseFloat(document.getElementById('sizeSlider').value);
     planetGroup.forEach(planet => {
         if (inScene[planet.userData.name] == false) {
             if (planet.userData.distance < distanceFilter)
@@ -237,6 +240,7 @@ function loadExoplanetData() {
         .catch(error => console.error('Error fetching exoplanet data:', error));
 }
 
+import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.128/examples/jsm/webxr/VRButton.js';
 
 function sceneSetup() {
     scene = new THREE.Scene(); //scene
@@ -247,6 +251,33 @@ function sceneSetup() {
     renderer = new THREE.WebGLRenderer({antialias: true}); // renderer
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('container').appendChild(renderer.domElement);
+
+    // ==============================================
+    //This is the new Code for VR Support
+    renderer.xr.enabled=true
+    document.body.appendChild(VRButton.createButton(renderer));
+    // Add a 360 background (sphere geometry)
+    const sphereGeometry = new THREE.SphereGeometry(500, 60, 40);
+    //NOTE: el sora hena msh bt-load 3ndy, check 3andoko
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load('/static/images/ggalaxy.jpg'),
+        side: THREE.BackSide // Invert the sphere so you're inside it
+    });
+
+
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    scene.add(sphere);
+
+    // Add a basic cube in the scene for some interaction
+    const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+    const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cube.position.set(0, 0, -3);
+    scene.add(cube);
+
+    //New Code Finish
+    // ============================================
+
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true; // Smooth controls
@@ -282,11 +313,11 @@ function applyEventListeners() {
 
     distanceSlider.addEventListener('input', () => {
         distanceValue.textContent = distanceSlider.value;
-        distanceFilter = parseFloat(distanceSlider.value);
+        let distanceFilter = parseFloat(distanceSlider.value);
     });
     sizeSlider.addEventListener('input', () => {
         sizeValue.textContent = sizeSlider.value;
-        sizeFilter = parseFloat(sizeSlider.value);
+        let sizeFilter = parseFloat(sizeSlider.value);
     });
 
     const applyBtn = document.getElementById('apply-btn');
